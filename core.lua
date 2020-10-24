@@ -1,25 +1,78 @@
--- TODO how do I trigger a daily thing? How do I know when the reset is?
+-- TODO how do I know when to reset stuff/how do we know when the daily reset is?
 -- TODO how do I keep track of completed?
 -- TODO how do I keep track of "I completed this today, but in a different login session"
 
 local ADDON, namespace = ...
 local L = namespace.L
 
---- initialize saved variable if it doesn't exist
+-----
+-- Initialize Saved Variable(s)
+-----
+
 if icbat_btdl_data == nil then
-    -- whether or not the label should show full names or initials
     icbat_btdl_data = {
         v = 1,
-        weekly = {},
-        daily = {},
+        weekly = {
+            {display = "Open your Great Vault", goal = 1, status = 0},
+            {display = "Raid Bosses killed", goal = 10, status = 0},
+            {display = "M+15 for weekly cache", goal = 10, status = 0},
+            {display = "Earn Conquest 1/3", goal = 1, status = 0},
+            {display = "Earn Conquest 2/3", goal = 1, status = 0},
+            {display = "Earn Conquest 3/3", goal = 1, status = 0},
+            {display = "Torghast", goal = 2, status = 0},
+        },
+        daily = {
+            {display = "Dungeons Finished", goal = 2, status = 0},
+            {display = "Maw Ventured Into", goal = 1, status = 0},
+        },
     }
 end
 
+-----
+-- Do Stuff :)
+-----
 
--- do stuff :)
+local function is_completed(task)
+    return task["goal"] == task["status"]
+end
 
-local function build_tooltip (tooltip) 
+local function calc_percentage(task)
+    return task["status"] / task["goal"]
+end
 
+local function display_list(self, list)
+    for _, task in pairs(list) do
+        -- print(k, v["display"], v["goal"], v["status"])
+        local is_completed = is_completed(task)
+        local checkmark = ""
+        if is_completed then
+            checkmark = "X"
+        end
+        self:AddLine(checkmark, task["display"], calc_percentage(task) .. "%")
+    end
+end
+
+local function build_tooltip (self)
+    -- col 1 is for completed yes/no
+    -- col 2 is for display
+    -- col 3 is for % complete display
+    self:AddHeader("", "ToDo List")
+    self:AddLine()
+
+    if (#icbat_btdl_data["weekly"] > 0) then
+        self:AddHeader("", "Weekly Goals")
+        self:AddSeparator()
+        display_list(self, icbat_btdl_data["weekly"])
+        self:AddLine()
+    end
+
+    if (#icbat_btdl_data["daily"] > 0) then
+        self:AddHeader("", "Daily Goals")
+        self:AddSeparator()
+        display_list(self, icbat_btdl_data["daily"])
+        self:AddLine()
+
+    end
 end
 
 -----
@@ -46,11 +99,10 @@ local function anchor_OnEnter(self)
         self.tooltip = nil
     end
 
-    -- Acquire a tooltip with 3 columns, respectively aligned to left, center and right
-    local tooltip = LibQTip:Acquire("FooBarTooltip", 2, "RIGHT", "LEFT")
+    local tooltip = LibQTip:Acquire("FooBarTooltip", 3, "RIGHT", "LEFT", "LEFT")
     self.tooltip = tooltip
     tooltip.OnRelease = OnRelease
-    tooltip.OnLeave = OnLeave
+    tooltip.OnLeave = OnLeave -- TODO WTF is this?
     tooltip:SetAutoHideDelay(.1, self)
 
     build_tooltip(tooltip)
@@ -74,22 +126,3 @@ end
 function dataobj:OnClick()
     -- what should happen on click of the broker? nothing?
 end
-
-local function set_label(self)
-    dataobj.text = "yes hello I am loaded"
-end
-
--- invisible frame for updating/hooking events
-local f = CreateFrame("frame")
-local UPDATEPERIOD = 5
-local elapsed = 0
-f:SetScript("OnUpdate", function(self, elap)
-    elapsed = elapsed + elap
-    if elapsed < UPDATEPERIOD then
-        return
-    end
-    elapsed = 0
-    set_label(self)
-end)
-
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
