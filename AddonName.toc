@@ -1,0 +1,12 @@
+## Interface: 90001
+## Title: 
+## Notes: 
+## Author: 
+## Version: 1
+## SavedVariablesPerCharacter: 
+## SavedVariables: 
+
+# Dependencies
+
+# This addon
+core.lua
