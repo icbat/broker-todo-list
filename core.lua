@@ -82,6 +82,8 @@ local function build_tooltip (self)
         display_list(self, icbat_btdl_data["daily"])
         self:AddLine()
     end
+
+    self:SetColumnTextColor(1, 0, 1, 0, 1)
 end
 
 -----
