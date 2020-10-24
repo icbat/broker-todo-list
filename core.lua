@@ -37,18 +37,28 @@ local function is_completed(task)
 end
 
 local function calc_percentage(task)
-    return task["status"] / task["goal"]
+    return  100 * task["status"] / task["goal"]
 end
 
 local function display_list(self, list)
     for _, task in pairs(list) do
         -- print(k, v["display"], v["goal"], v["status"])
         local is_completed = is_completed(task)
+        
         local checkmark = ""
         if is_completed then
             checkmark = "X"
         end
-        self:AddLine(checkmark, task["display"], calc_percentage(task) .. "%")
+
+        local line = self:AddLine(checkmark, task["display"], calc_percentage(task) .. "%")
+
+        if not is_completed then
+            local increment_status = function()
+                self:Clear()
+                task["status"] = task["status"] + 1
+            end
+            self:SetLineScript(line, "OnMouseUp", increment_status)
+        end
     end
 end
 
@@ -71,7 +81,6 @@ local function build_tooltip (self)
         self:AddSeparator()
         display_list(self, icbat_btdl_data["daily"])
         self:AddLine()
-
     end
 end
 
@@ -80,7 +89,6 @@ end
 -----
 
 local LibQTip = LibStub('LibQTip-1.0')
-
 local ldb = LibStub:GetLibrary("LibDataBroker-1.1")
 
 local dataobj = ldb:NewDataObject(ADDON, {
