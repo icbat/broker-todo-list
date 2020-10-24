@@ -1,29 +1,16 @@
-# wow-addon-template
-A template repo for how I setup my WoW Addons for development.
-
-## TODOs for this template
-- Can you generate Changelogs?
-- Can we automate any/all of these steps with a CLI w/ prompts?
-
-## Steps to use this template
-
-1. Update all the values in `AddonName.toc` to be correct, deleting saved variables lines if unnecessary
-1. Rename `AddonName.toc` to have your exact AddonName
-1. Update environment variables in `.github/workflows/release.yml` so that builds will work
-1. Tag the repo as `wow-addon` so it's more discoverable.
-1. Update the rest of the readme
-1. Delete everything through here and including this in the Readme.
-
-AddonName
+Broker:  ToDo List
 =========
 
-A short description of what this addon does, who it's for
+A daily and weekend checklist to help you reach your goals
 
 Get it on [WoW Interface](WOWILINK) or use the [Cursebreaker tool](https://github.com/AcidWeb/CurseBreaker) (recommended)
 
+## TODOs for this project
+1. Update environment variables in `.github/workflows/release.yml` so that builds will work
+1. Setup WoWI + CI
 
 ## Changelog
-- Put patch notes here
+- Initial Release
 
 ## Contributing
 
@@ -35,4 +22,4 @@ Get it on [WoW Interface](WOWILINK) or use the [Cursebreaker tool](https://githu
 
 ### Localization
 
-If you'd like to help localize the text here, simply follow the above steps and change the Localization.lua file to add your translations. Please submit an [issue on GitHub](GHISSUESLINK) if you need any assistance with this workflow.
+If you'd like to help localize the text here, simply follow the above steps and change the Localization.lua file to add your translations. Please submit an [issue on GitHub](https://github.com/icbat/broker-todo-list/issues) if you need any assistance with this workflow.

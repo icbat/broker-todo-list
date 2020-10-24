@@ -1,0 +1,13 @@
+## Interface: 90001
+## Title: Broker: ToDo list
+## Notes: Set daily and weekly goals for yourself, then accomplish them
+## Author: Icbat
+## Version: 1
+## SavedVariablesPerCharacter: 
+
+# Dependencies
+
+# This addon
+localization.lua
+core.lua
+
