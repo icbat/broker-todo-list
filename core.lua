@@ -40,17 +40,30 @@ local function calc_percentage(task)
     return  100 * task["status"] / task["goal"]
 end
 
+local function percentage_color(percentage)
+    if percentage == 0 then
+        return 1, 0, 0, 1
+    end
+
+    if percentage == 100 then
+        return 0, 1, 0, 1
+    end
+
+    return 1, 0.5, 0, 1
+end
+
 local function display_list(self, list)
     for _, task in pairs(list) do
         -- print(k, v["display"], v["goal"], v["status"])
         local is_completed = is_completed(task)
+        local percentage = calc_percentage(task)
         
         local checkmark = ""
         if is_completed then
             checkmark = "X"
         end
 
-        local line = self:AddLine(checkmark, task["display"], calc_percentage(task) .. "%")
+        local line = self:AddLine(checkmark, task["display"], percentage .. "%")
 
         if not is_completed then
             local increment_status = function()
@@ -59,6 +72,8 @@ local function display_list(self, list)
             end
             self:SetLineScript(line, "OnMouseUp", increment_status)
         end
+
+        self:SetCellTextColor(line, 3, percentage_color(percentage))
     end
 end
 
@@ -66,8 +81,12 @@ local function build_tooltip (self)
     -- col 1 is for completed yes/no
     -- col 2 is for display
     -- col 3 is for % complete display
-    self:AddHeader("", "ToDo List")
-    self:AddLine()
+    if (#icbat_btdl_data["weekly"] == 0 and #icbat_btdl_data["daily"] == 0) then
+        self:AddHeader("", "ToDo List")
+        self:AddSeparator()
+        self:AddLine("", "Setup goals in Settings -> Interface -> Addons")
+        self:AddLine()
+    end
 
     if (#icbat_btdl_data["weekly"] > 0) then
         self:AddHeader("", "Weekly Goals")
