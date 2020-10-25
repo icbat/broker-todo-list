@@ -67,16 +67,25 @@ local function build_options()
     return {
         type = "group",
         args = {
+            weekly = {
+                order = 1,
+                name = "Weekly Goals",
+                type = "group",
+                args = build_options_from_list("weekly")
+            },
+
             daily = {
+                order = 2,
                 name = "Daily Goals",
                 type = "group",
                 args = build_options_from_list("daily")
             },
 
-            weekly = {
-                name = "Weekly Goals",
+            oneOff = {
+                order = 3,
+                name = "One-Off Goals",
                 type = "group",
-                args = build_options_from_list("weekly")
+                args = build_options_from_list("oneOff")
             }
         }
     }

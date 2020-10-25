@@ -1,6 +1,8 @@
 -- TODO how do I know when to reset stuff/how do we know when the daily reset is?
--- TODO how do I keep track of completed?
--- TODO how do I keep track of "I completed this today, but in a different login session"
+-- TODO fill out localization example
+-- TODO label should be interesting
+-- TODO should show status in the tooltip (maybe not percent at all?)
+-- TODO need a way to reset/decrement status manually
 
 local ADDON, namespace = ...
 local L = namespace.L
@@ -31,7 +33,6 @@ end
 
 local function display_list(self, list)
     for _, task in pairs(list) do
-        -- print(k, v["display"], v["goal"], v["status"])
         local is_completed = is_completed(task)
         local percentage = calc_percentage(task)
 
@@ -58,7 +59,7 @@ local function build_tooltip (self)
     -- col 1 is for completed yes/no
     -- col 2 is for display
     -- col 3 is for % complete display
-    if (#icbat_btdl_data["weekly"] == 0 and #icbat_btdl_data["daily"] == 0) then
+    if (#icbat_btdl_data["weekly"] == 0 and #icbat_btdl_data["daily"] == 0 and #icbat_btdl_data["oneOff"] == 0) then
         self:AddHeader("", "ToDo List")
         self:AddSeparator()
         self:AddLine("", "Setup goals in Settings -> Interface -> Addons")
@@ -76,6 +77,13 @@ local function build_tooltip (self)
         self:AddHeader("", "Daily Goals")
         self:AddSeparator()
         display_list(self, icbat_btdl_data["daily"])
+        self:AddLine()
+    end
+
+    if (#icbat_btdl_data["oneOff"] > 0) then
+        self:AddHeader("", "One-Off Goals")
+        self:AddSeparator()
+        display_list(self, icbat_btdl_data["oneOff"])
         self:AddLine()
     end
 
