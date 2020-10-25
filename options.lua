@@ -47,16 +47,21 @@ local function buildTaskOptions(listName, task, i)
     }
 end
 
-local function asdfasdfasdf(listName)
+local function build_options_from_list(listName)
     local optionsList = {}
 
     for i, task in pairs(icbat_btdl_data[listName]) do
-        optionsList[task["display"]] = buildTaskOptions(listName, task, i)
+        optionsList[string.format("%s%d", task["display"], i)] = buildTaskOptions(listName, task, i)
     end
+
+    optionsList["Create New Task"] = {
+        type = "execute",
+        name = "Create New Task",
+        func = function() table.insert(icbat_btdl_data[listName], namespace["template_task"]()) end,
+    }
 
     return optionsList
 end
-
 
 local function build_options()
     return {
@@ -65,13 +70,13 @@ local function build_options()
             daily = {
                 name = "Daily Goals",
                 type = "group",
-                args = asdfasdfasdf("daily")
+                args = build_options_from_list("daily")
             },
 
             weekly = {
                 name = "Weekly Goals",
                 type = "group",
-                args = asdfasdfasdf("weekly")
+                args = build_options_from_list("weekly")
             }
         }
     }

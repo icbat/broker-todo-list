@@ -1,3 +1,5 @@
+local ADDON, namespace = ...
+
 -----
 -- Initialize Saved Variable(s)
 -----
@@ -42,5 +44,13 @@ if icbat_btdl_data == nil then
             goal = 1,
             status = 0
         }}
+    }
+end
+
+namespace["template_task"] = function()
+    return {
+        display = "New Task",
+        goal = 1,
+        status = 0
     }
 end
