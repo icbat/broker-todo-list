@@ -40,7 +40,7 @@ local function display_list(self, list)
             checkmark = "X"
         end
 
-        local line = self:AddLine(checkmark, task["display"], percentage .. "%")
+        local line = self:AddLine(checkmark, task["display"], string.format("%d%%", percentage))
 
         if not is_completed then
             local increment_status = function()
