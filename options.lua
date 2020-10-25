@@ -1,7 +1,6 @@
 local ADDON, namespace = ...
 
-local function buildTaskOptions(listName, task, i)
-    print(task["display"], task["goal"])
+local function build_task_options(listName, task, i)
     return {
         name = task["display"],
         order = i,
@@ -33,6 +32,7 @@ local function buildTaskOptions(listName, task, i)
                 end,
                 set = function(info, value)
                     task["goal"] = value
+                    task["status"] = math.min(value, task["status"])
                 end
             },
             delete = {
@@ -51,7 +51,7 @@ local function build_options_from_list(listName)
     local optionsList = {}
 
     for i, task in pairs(icbat_btdl_data[listName]) do
-        optionsList[string.format("%s%d", task["display"], i)] = buildTaskOptions(listName, task, i)
+        optionsList[string.format("%s%d", task["display"], i)] = build_task_options(listName, task, i)
     end
 
     optionsList["Create New Task"] = {
