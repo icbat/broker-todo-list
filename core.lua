@@ -1,8 +1,8 @@
 -- TODO how do I know when to reset stuff/how do we know when the daily reset is?
+-- TODO need a way to reset/decrement status manually
 -- TODO fill out localization example
 -- TODO label should be interesting
 -- TODO should show status in the tooltip (maybe not percent at all?)
--- TODO need a way to reset/decrement status manually
 
 local ADDON, namespace = ...
 local L = namespace.L
@@ -116,7 +116,6 @@ local function anchor_OnEnter(self)
     local tooltip = LibQTip:Acquire("FooBarTooltip", 3, "RIGHT", "LEFT", "LEFT")
     self.tooltip = tooltip
     tooltip.OnRelease = OnRelease
-    tooltip.OnLeave = OnLeave -- TODO WTF is this?
     tooltip:SetAutoHideDelay(.1, self)
 
     build_tooltip(tooltip)
