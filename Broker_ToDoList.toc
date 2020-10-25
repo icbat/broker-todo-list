@@ -11,4 +11,5 @@ embed.xml
 
 # This addon
 localization.lua
+options.lua
 core.lua

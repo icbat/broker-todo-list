@@ -153,5 +153,8 @@ function dataobj:OnLeave()
 end
 
 function dataobj:OnClick()
-    -- what should happen on click of the broker? nothing?
+    InterfaceOptionsFrame_Show()
+    if InterfaceOptionsFrame:IsShown() then
+        InterfaceOptionsFrame_OpenToCategory(namespace.options_panel)
+    end
 end
