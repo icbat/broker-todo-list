@@ -113,7 +113,7 @@ local function anchor_OnEnter(self)
         self.tooltip = nil
     end
 
-    local tooltip = LibQTip:Acquire("FooBarTooltip", 3, "RIGHT", "LEFT", "LEFT")
+    local tooltip = LibQTip:Acquire("BrokerTodoTooltip", 3, "RIGHT", "LEFT", "LEFT")
     self.tooltip = tooltip
     tooltip.OnRelease = OnRelease
     tooltip:SetAutoHideDelay(.1, self)
