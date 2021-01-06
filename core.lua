@@ -1,8 +1,15 @@
--- TODO how do I know when to reset stuff/how do we know when the daily reset is?
--- TODO need a way to reset/decrement status manually
--- TODO fill out localization example
+-- TODO options revamped
+-- TODO another task or 2 to start
+
 -- TODO label should be interesting
 -- TODO should show status in the tooltip (maybe not percent at all?)
+-- TODO what's it like when there are no tasks? is that reasonable?
+-- TODO extract some common vars for things like "Broker: ToDo List"
+-- TODO fill out localization example
+
+-- initial release above this line
+------------
+
 
 local ADDON, namespace = ...
 local L = namespace.L
@@ -11,12 +18,12 @@ local L = namespace.L
 -- Do Stuff :)
 -----
 
-local function is_completed(task)
-    return task["goal"] == task["status"]
-end
+--- a dictionary of name: percentage completed (float 0-1)
+local internalState = {}
 
-local function calc_percentage(task)
-    return  100 * task["status"] / task["goal"]
+namespace.updateStat = function(name, percentage)
+    -- namespace.log(name, "percent completed", percentage, "%")
+    internalState[name] = percentage
 end
 
 local function percentage_color(percentage)
@@ -32,26 +39,18 @@ local function percentage_color(percentage)
 end
 
 local function display_list(self, list)
-    for _, task in pairs(list) do
-        local is_completed = is_completed(task)
-        local percentage = calc_percentage(task)
+    for name, percentage in pairs(list) do
+        local is_completed = percentage >= 1
+        local converted = percentage * 100
 
         local checkmark = ""
         if is_completed then
             checkmark = "X"
         end
 
-        local line = self:AddLine(checkmark, task["display"], string.format("%d%%", percentage))
+        local line = self:AddLine(checkmark, name, string.format("%d%%", converted))
 
-        if not is_completed then
-            local increment_status = function()
-                self:Clear()
-                task["status"] = task["status"] + 1
-            end
-            self:SetLineScript(line, "OnMouseUp", increment_status)
-        end
-
-        self:SetCellTextColor(line, 3, percentage_color(percentage))
+        self:SetCellTextColor(line, 3, percentage_color(converted))
     end
 end
 
@@ -59,33 +58,19 @@ local function build_tooltip (self)
     -- col 1 is for completed yes/no
     -- col 2 is for display
     -- col 3 is for % complete display
-    if (#icbat_btdl_data["weekly"] == 0 and #icbat_btdl_data["daily"] == 0 and #icbat_btdl_data["oneOff"] == 0) then
-        self:AddHeader("", "ToDo List")
-        self:AddSeparator()
-        self:AddLine("", "Setup goals in Settings -> Interface -> Addons")
-        self:AddLine()
-    end
 
-    if (#icbat_btdl_data["weekly"] > 0) then
-        self:AddHeader("", "Weekly Goals")
-        self:AddSeparator()
-        display_list(self, icbat_btdl_data["weekly"])
-        self:AddLine()
-    end
+    -- TODO what do we show if they don't want to see any goals?
+    -- if (#icbat_btdl_data["weekly"] == 0 and #icbat_btdl_data["daily"] == 0 and #icbat_btdl_data["oneOff"] == 0) then
+        -- self:AddHeader("", "ToDo List")
+        -- self:AddSeparator()
+        -- self:AddLine("", "Setup goals in Settings -> Interface -> Addons")
+        -- self:AddLine()
+    -- end
 
-    if (#icbat_btdl_data["daily"] > 0) then
-        self:AddHeader("", "Daily Goals")
-        self:AddSeparator()
-        display_list(self, icbat_btdl_data["daily"])
-        self:AddLine()
-    end
-
-    if (#icbat_btdl_data["oneOff"] > 0) then
-        self:AddHeader("", "One-Off Goals")
-        self:AddSeparator()
-        display_list(self, icbat_btdl_data["oneOff"])
-        self:AddLine()
-    end
+    self:AddHeader("", "Goals")
+    self:AddSeparator()
+    display_list(self, internalState)
+    self:AddLine()
 
     self:SetColumnTextColor(1, 0, 1, 0, 1)
 end

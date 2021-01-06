@@ -3,14 +3,21 @@
 ## Notes: Set daily and weekly goals for yourself, then accomplish them
 ## Author: Icbat
 ## Version: 1
-## SavedVariablesPerCharacter: icbat_btdl_data
+## SavedVariablesPerCharacter: icbat_btdl_options
 
 
 # Dependencies
 embed.xml
 
 # This addon
+log.lua
 localization.lua
 savedvars.lua
 options.lua
+
 core.lua
+
+event_broker.lua
+events/weekly_conquest_capped.lua
+# events/claimed_great_vault.lua
+# events/world_boss_killed.lua
